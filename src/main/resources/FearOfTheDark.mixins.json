@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "tfc.fearofthedark.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "ServerPlayerEntityMixin"
+  ],
+  "client": [
+    "HealthRendererMixin",
+    "ClientPlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

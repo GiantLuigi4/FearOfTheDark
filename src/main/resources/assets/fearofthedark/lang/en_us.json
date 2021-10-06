@@ -1,0 +1,18 @@
+{
+  "fearofthedark.dark.prompt": "It is dark... %s",
+
+  "fearofthedark.nervousness.0": "You begin to want some torch light...",
+  "fearofthedark.nervousness.1": "You feel like stuff might go wrong...",
+  "fearofthedark.nervousness.2": "You feel a little uneasy...",
+
+  "fearofthedark.paranoia.0": "You begin to focus more on your surroundings than yourself...",
+  "fearofthedark.paranoia.1": "You feel like you will be attacked...",
+  "fearofthedark.paranoia.2": "You no longer feel safe...",
+
+  "fearofthedark.fear.0": "You fear the dark...",
+  "fearofthedark.fear.1": "You feel a impending sense of danger...",
+  "fearofthedark.fear.2": "You really want a torch to light the way...",
+  "fearofthedark.fear.3": "You do not want to wait much longer to find light...",
+  "fearofthedark.fear.4": "You do not want to wait any longer to find light...",
+  "fearofthedark.fear.5": "You feel like there is something following you..."
+}
