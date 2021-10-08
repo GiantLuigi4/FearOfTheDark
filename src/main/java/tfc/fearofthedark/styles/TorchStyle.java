@@ -16,7 +16,7 @@ import java.util.Objects;
 public class TorchStyle extends ExtraStyle {
 	public double speed;
 	public boolean globalTime = false;
-	private int tickStart;
+	private int tickStart = GeneralUtils.getTime();
 	
 	public Color lightColor = new Color(255, 255, 100);
 	
@@ -44,12 +44,20 @@ public class TorchStyle extends ExtraStyle {
 		
 		double v1 = ((index + 14) - (c1 * 15));
 		double v2 = (((count - index) + 28) - ((1 - c1) * 15));
+		if (v1 <= 0 || v2 <= 0) {
+			return new Color(
+					(int) (99 * brightnessMultiplier),
+					(int) (48 * brightnessMultiplier),
+					(int) (0 * brightnessMultiplier),
+					color.getAlpha()
+			);
+		}
 		v1 = Math.min(v1, v2);
 		if (v1 > 8) {
 			return new Color(
-					(int)(color.getRed() * brightnessMultiplier),
-					(int)(color.getGreen() * brightnessMultiplier),
-					(int)(color.getBlue() * brightnessMultiplier),
+					(int) (color.getRed() * brightnessMultiplier),
+					(int) (color.getGreen() * brightnessMultiplier),
+					(int) (color.getBlue() * brightnessMultiplier),
 					color.getAlpha()
 			);
 		}
@@ -58,7 +66,7 @@ public class TorchStyle extends ExtraStyle {
 		v1 = Math.abs(v1);
 		v1 += 8;
 		v1 /= 24;
-		v1 = 1- v1;
+		v1 = 1 - v1;
 		return new Color(
 				(int) (MathHelper.lerp(v1, color.getRed(), lightColor.getRed()) * brightnessMultiplier),
 				(int) (MathHelper.lerp(v1, color.getGreen(), lightColor.getGreen()) * brightnessMultiplier),

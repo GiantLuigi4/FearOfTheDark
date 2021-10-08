@@ -4,6 +4,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.util.Identifier;
 import tfc.fearofthedark.common.DualFactored;
+import tfc.fearofthedark.styles.FocusStyle;
+import tfc.fearofthedark.styles.ShakyStyle;
 import tfc.fearofthedark.styles.SwingingLightStyle;
 import tfc.fearofthedark.styles.TorchStyle;
 import tfc.stylesplusplus.api.StyleRegistry;
@@ -16,6 +18,8 @@ public class FearOfTheDark implements ModInitializer {
 		StyleRegistry.addStyleLoader(()->{
 			StyleRegistry.register(new Identifier("fearofthedark:swinging_light"), SwingingLightStyle::new);
 			StyleRegistry.register(new Identifier("fearofthedark:torch_style"), TorchStyle::new);
+			StyleRegistry.register(new Identifier("fearofthedark:shaky"), ShakyStyle::new);
+			StyleRegistry.register(new Identifier("fearofthedark:focus"), FocusStyle::new);
 		});
 		
 		ServerPlayerEvents.AFTER_RESPAWN.register(

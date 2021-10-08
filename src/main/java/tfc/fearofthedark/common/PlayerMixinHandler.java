@@ -39,7 +39,7 @@ public class PlayerMixinHandler {
 		
 		ticksElapse = (((IHaveFear)entity).FearOfTheDark_getTicks() - ticksUneasy) / ticksElapse;
 		
-		
+		// https://www.uuidgenerator.net/version4
 		EntityAttributeModifier modifier = new EntityAttributeModifier(UUID.fromString("4d9d898d-8589-40d1-aeb3-f286bbf39d32"), "fearofthedark:speed", -((ticksElapse / 10f)), EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
 		EntityAttributeInstance speed = container.getCustomInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
 		if (speed != null) {

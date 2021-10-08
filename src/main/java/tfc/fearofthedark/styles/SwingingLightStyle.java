@@ -15,7 +15,7 @@ import java.util.Objects;
 public class SwingingLightStyle extends ExtraStyle {
 	public double speed;
 	public boolean globalTime = false;
-	private int tickStart;
+	private int tickStart = GeneralUtils.getTime();
 	
 	public Color lightColor = new Color(255, 255, 100);
 	

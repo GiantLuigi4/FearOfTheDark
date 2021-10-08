@@ -1,16 +1,22 @@
 package tfc.fearofthedark.common;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.gl.PostProcessShader;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
+import tfc.fearofthedark.styles.FocusStyle;
+import tfc.fearofthedark.styles.ShakyStyle;
 import tfc.fearofthedark.styles.SwingingLightStyle;
 import tfc.fearofthedark.styles.TorchStyle;
 import tfc.stylesplusplus.api.ExtraStyle;
@@ -33,6 +39,17 @@ public class ServerPlayerEntityMixinHandler {
 	
 	static {
 		styleMap.put(new Identifier("nervousness:0"), new TorchStyle());
+		styleMap.put(new Identifier("nervousness:1"), new ShakyStyle());
+		styleMap.put(new Identifier("nervousness:2"), new ShakyStyle());
+		
+		styleMap.put(new Identifier("paranoia:0"), new FocusStyle());
+		
+		{
+			styleMap.put(new Identifier("fear:3"), new TorchStyle());
+			TorchStyle style = new TorchStyle();
+			style.speed *= 2;
+			styleMap.put(new Identifier("fear:4"), style);
+		}
 	}
 	
 	public static boolean checkPhase(ServerPlayerEntity player, int phase, int ticksInDark, int phaseNumber, int ticks, String name, int messageCount) {
@@ -52,15 +69,15 @@ public class ServerPlayerEntityMixinHandler {
 					
 					text.append(itIsDark);
 				}
-				
+
 //				text.setStyle(Style.EMPTY).withFormatting(Formatting.RESET);
 				{
 					Random random = new Random();
 					int index = random.nextInt(messageCount + 1);
 					MutableText child = new TranslatableText("fearofthedark." + name + "." + index);
 					Style style = Style.EMPTY.withBold(null).withColor(Formatting.DARK_GRAY);
-					ExtraStyle extraStyle = styleMap.getOrDefault(new Identifier(name, ""+index), null);
-					if (extraStyle != null) ((ExtraStyleData)style).getExtraStyles().add(extraStyle);
+					ExtraStyle extraStyle = styleMap.getOrDefault(new Identifier(name, "" + index), null);
+					if (extraStyle != null) ((ExtraStyleData) style).getExtraStyles().add(extraStyle.copy());
 					child.setStyle(style);
 					text.append(child);
 				}
