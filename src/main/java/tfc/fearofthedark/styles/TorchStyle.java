@@ -71,7 +71,7 @@ public class TorchStyle extends ExtraStyle {
 				(int) (MathHelper.lerp(v1, color.getRed(), lightColor.getRed()) * brightnessMultiplier),
 				(int) (MathHelper.lerp(v1, color.getGreen(), lightColor.getGreen()) * brightnessMultiplier),
 				(int) (MathHelper.lerp(v1, color.getBlue(), lightColor.getBlue()) * brightnessMultiplier),
-				255
+				color.getAlpha()
 		);
 	}
 	

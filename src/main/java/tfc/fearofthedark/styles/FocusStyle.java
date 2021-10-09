@@ -8,6 +8,7 @@ import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.opengl.GL11;
+import tfc.fearofthedark.client.Utils;
 import tfc.stylesplusplus.api.Color;
 import tfc.stylesplusplus.api.ExtraStyle;
 import tfc.stylesplusplus.api.util.GeneralUtils;
@@ -44,24 +45,8 @@ public class FocusStyle extends ExtraStyle {
 		dist = Math.max(Math.min(dist, 1), 0);
 		
 		if (Math.abs(index - middle) <= 1) {
-			AbstractTexture texture = MinecraftClient.getInstance().getTextureManager().getTexture(MinecraftClient.getInstance().player.getSkinTexture());
-			
-			int w = 64;
-			int[] pixel = new int[w * w];
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getGlId());
-			GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, GL11.GL_BYTE, pixel);
-//			BufferedImage image = new BufferedImage(w, w, BufferedImage.TYPE_INT_ARGB);
-//			for (int x = 0; x < w; x++) {
-//				for (int y = 0; y < w; y++) {
-//					Color col = new Color(pixel[x + (y * w)]);
-//					image.setRGB(x, y, new Color(col.getBlue(), col.getGreen(), col.getRed(), col.getAlpha()).getRGB());
-//				}
-//			}
-			
-			pixel[3] = ((pixel[(24 + (26 * w))] >> 24)) & 0xff * 2;
-			pixel[2] = ((pixel[(24 + (26 * w))] >> 16)) & 0xff;
-			pixel[1] = ((pixel[(24 + (26 * w))] >> 8)) & 0xff;
-			pixel[0] = ((pixel[(24 + (26 * w))] >> 0)) & 0xff;
+			int point = index - middle;
+			int[] pixel = Utils.getSkinColor(point);
 			
 			return new Color(
 //					(int) (0 * dist * brightnessMultiplier),

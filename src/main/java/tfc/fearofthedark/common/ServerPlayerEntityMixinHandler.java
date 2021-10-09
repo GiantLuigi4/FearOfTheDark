@@ -15,10 +15,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
-import tfc.fearofthedark.styles.FocusStyle;
-import tfc.fearofthedark.styles.ShakyStyle;
-import tfc.fearofthedark.styles.SwingingLightStyle;
-import tfc.fearofthedark.styles.TorchStyle;
+import tfc.fearofthedark.styles.*;
 import tfc.stylesplusplus.api.ExtraStyle;
 import tfc.stylesplusplus.api.ExtraStyleData;
 
@@ -49,6 +46,7 @@ public class ServerPlayerEntityMixinHandler {
 			TorchStyle style = new TorchStyle();
 			style.speed *= 2;
 			styleMap.put(new Identifier("fear:4"), style);
+			styleMap.put(new Identifier("fear:5"), new FollowStyle());
 		}
 	}
 	
