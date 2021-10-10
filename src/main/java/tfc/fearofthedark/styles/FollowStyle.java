@@ -30,14 +30,14 @@ public class FollowStyle extends ExtraStyle {
 		int tick = GeneralUtils.getTime() - tickStart;
 		int oneThird = (int) (count * stopPoint);
 		
-		int tickFollow = ((tick - 40) % (count + 40));
+		int tickFollow = ((tick - 40) % (count + 60));
 		{
 			int pause = Math.max(Math.min(tickFollow, oneThird + 20), oneThird);
 			tickFollow -= pause;
 			tickFollow += oneThird;
 		}
 		
-		tick %= count + 40;
+		tick %= count + 60;
 		{
 			int pause = Math.max(Math.min(tick, oneThird + 20), oneThird);
 			tick -= pause;
@@ -54,9 +54,9 @@ public class FollowStyle extends ExtraStyle {
 			int[] pixel = Utils.getSkinColor(point);
 			
 			return new Color(
-					(int) ((pixel[0]) * brightnessMultiplier),
-					(int) ((pixel[1]) * brightnessMultiplier),
-					(int) ((pixel[2]) * brightnessMultiplier),
+					(int) ((pixel[0])),
+					(int) ((pixel[1])),
+					(int) ((pixel[2])),
 					color.getAlpha()
 			);
 		}
@@ -69,9 +69,9 @@ public class FollowStyle extends ExtraStyle {
 		}
 		
 		return new Color(
-				(int) ((color.getRed()) * brightnessMultiplier),
-				(int) ((color.getGreen()) * brightnessMultiplier),
-				(int) ((color.getBlue()) * brightnessMultiplier),
+				(int) ((color.getRed())),
+				(int) ((color.getGreen())),
+				(int) ((color.getBlue())),
 				(color.getAlpha())
 		);
 	}

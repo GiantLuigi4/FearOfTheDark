@@ -46,18 +46,18 @@ public class TorchStyle extends ExtraStyle {
 		double v2 = (((count - index) + 28) - ((1 - c1) * 15));
 		if (v1 <= 0 || v2 <= 0) {
 			return new Color(
-					(int) (99 * brightnessMultiplier),
-					(int) (48 * brightnessMultiplier),
-					(int) (0 * brightnessMultiplier),
+					(int) (99),
+					(int) (48),
+					(int) (0),
 					color.getAlpha()
 			);
 		}
 		v1 = Math.min(v1, v2);
 		if (v1 > 8) {
 			return new Color(
-					(int) (color.getRed() * brightnessMultiplier),
-					(int) (color.getGreen() * brightnessMultiplier),
-					(int) (color.getBlue() * brightnessMultiplier),
+					(int) (color.getRed()),
+					(int) (color.getGreen()),
+					(int) (color.getBlue()),
 					color.getAlpha()
 			);
 		}
@@ -68,9 +68,9 @@ public class TorchStyle extends ExtraStyle {
 		v1 /= 24;
 		v1 = 1 - v1;
 		return new Color(
-				(int) (MathHelper.lerp(v1, color.getRed(), lightColor.getRed()) * brightnessMultiplier),
-				(int) (MathHelper.lerp(v1, color.getGreen(), lightColor.getGreen()) * brightnessMultiplier),
-				(int) (MathHelper.lerp(v1, color.getBlue(), lightColor.getBlue()) * brightnessMultiplier),
+				(int) (MathHelper.lerp(v1, color.getRed(), lightColor.getRed())),
+				(int) (MathHelper.lerp(v1, color.getGreen(), lightColor.getGreen())),
+				(int) (MathHelper.lerp(v1, color.getBlue(), lightColor.getBlue())),
 				color.getAlpha()
 		);
 	}

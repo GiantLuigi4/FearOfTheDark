@@ -2,13 +2,14 @@ package tfc.fearofthedark.mixin;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.*;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.LightType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,8 +18,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tfc.fearofthedark.common.*;
+import tfc.fearofthedark.common.DualFactored;
+import tfc.fearofthedark.common.PlayerMixinHandler;
+import tfc.fearofthedark.common.ServerPlayerEntityMixinHandler;
 import tfc.fearofthedark.networking.FearOfTheDarkPacket;
+import tfc.stylesplusplus.mixin.SerializerMixin;
 
 import java.util.Random;
 
@@ -30,8 +34,10 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 	@Shadow
 	public abstract void sendMessage(Text message, boolean actionBar);
 	
-	@Shadow public ServerPlayNetworkHandler networkHandler;
-	@Shadow private float syncedHealth;
+	@Shadow
+	public ServerPlayNetworkHandler networkHandler;
+	@Shadow
+	private float syncedHealth;
 	@Unique
 	protected int ticksInDark;
 	
@@ -96,7 +102,7 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 		if (fearFactorB >= 2f) fearFactorB = 2f;
 		float knownFactor = fearFactorA * fearFactorB;
 //		if  (tickNumber == 125) {
-		if  (tickNumber == 30) {
+		if (tickNumber == 30) {
 			ServerPlayNetworking.send(
 					(ServerPlayerEntity) (Object) this,
 					new Identifier("fearofthedark:networking"),
@@ -113,7 +119,7 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 		if (getServerWorld().isNight()) sky = 0;
 		
 		if (syncedHealth < lastHealth) {
-			if (block <= 3  && sky == 0) {
+			if (block <= 3 && sky == 0) {
 				ticksInDark += 20;
 			}
 		}
@@ -133,7 +139,7 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 		else if (checkPhase(1, (int) (PlayerMixinHandler.getTimeFactor(1) * scale), "nervousness", 2)) ;
 		else phase = 0;
 		
-		if (((Entity)(Object)this).age % 25 == 3) {
+		if (((Entity) (Object) this).age % 25 == 3) {
 			ServerPlayNetworking.send(
 					(ServerPlayerEntity) (Object) this,
 					new Identifier("fearofthedark:networking"),

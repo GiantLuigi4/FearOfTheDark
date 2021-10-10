@@ -13,6 +13,7 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
     maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.terraformersmc.com/' }
 }
 
 loom {
@@ -28,7 +29,10 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
 //    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation 'com.github.GiantLuigi4:StylesPlusPlus:0b1c2105b8'
+    modImplementation 'com.github.GiantLuigi4:StylesPlusPlus:da0895fccd'
+
+    modCompileOnly ("com.terraformersmc:modmenu:2.0.0-beta.7") {exclude module: "fabric-api"}
+    modRuntimeOnly ("com.terraformersmc:modmenu:2.0.0-beta.7") {exclude module: "fabric-api"}
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.

@@ -1,10 +1,12 @@
 {
   "schemaVersion": 1,
   "id": "fearofthedark",
-  "version": "${version}",
+  "version": "1.0",
   "name": "FearOfTheDark",
-  "description": "",
-  "authors": [],
+  "description": "MMD SpookyJam Mod\n\nGoes well with True Darkness\n\nNo description yet...",
+  "authors": [
+    "GiantLuigi4"
+  ],
   "contact": {},
   "license": "MIT",
   "icon": "assets/FearOfTheDark/icon.png",
@@ -25,5 +27,5 @@
     "fabric": "*",
     "minecraft": "1.17.1"
   },
-  "accessWidener": "fearofthedark.accesswidener"
+  "accessWidener": "fearofthedark.accesswidener",
 }

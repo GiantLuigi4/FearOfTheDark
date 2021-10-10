@@ -49,19 +49,19 @@ public class FocusStyle extends ExtraStyle {
 			int[] pixel = Utils.getSkinColor(point);
 			
 			return new Color(
-//					(int) (0 * dist * brightnessMultiplier),
-//					(int) (0 * dist * brightnessMultiplier),
-					(int) ((pixel[0]) * dist * brightnessMultiplier),
-					(int) ((pixel[1]) * dist * brightnessMultiplier),
-					(int) ((pixel[2]) * dist * brightnessMultiplier),
+//					(int) (0 * dist),
+//					(int) (0 * dist),
+					(int) ((pixel[0]) * dist),
+					(int) ((pixel[1]) * dist),
+					(int) ((pixel[2]) * dist),
 					(int) (color.getAlpha() * dist)
 			);
 		}
 		
 		return new Color(
-				(int) (color.getRed() * dist * brightnessMultiplier),
-				(int) (color.getGreen() * dist * brightnessMultiplier),
-				(int) (color.getBlue() * dist * brightnessMultiplier),
+				(int) (color.getRed() * dist),
+				(int) (color.getGreen() * dist),
+				(int) (color.getBlue() * dist),
 				(int) (color.getAlpha() * dist)
 		);
 	}

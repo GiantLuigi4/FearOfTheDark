@@ -19,16 +19,6 @@ public class ShakyStyle extends ExtraStyle {
 	Random rng;
 	
 	@Override
-	public Color modifyColor(Color color, int index, int count, char c, String str, Style fullStyle, float brightnessMultiplier) {
-		return new Color(
-				(int) (color.getRed() * brightnessMultiplier),
-				(int) (color.getGreen() * brightnessMultiplier),
-				(int) (color.getBlue() * brightnessMultiplier),
-				color.getAlpha()
-		);
-	}
-	
-	@Override
 	public void apply(int index, int count, char c, Matrix4f matrix, String str, Style fullStyle) {
 		if (index == 0) {
 			int tick = GeneralUtils.getTime() - tickStart;

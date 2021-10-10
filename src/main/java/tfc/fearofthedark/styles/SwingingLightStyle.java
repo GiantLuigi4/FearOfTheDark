@@ -47,9 +47,9 @@ public class SwingingLightStyle extends ExtraStyle {
 		double dist = 1 - (Math.abs(index - v) / count);
 		dist *= Math.pow(dist, count / 5f);
 		color = new Color(
-				(int) (Math.max(color.getRed(), lightColor.getRed() * dist) * brightnessMultiplier),
-				(int) (Math.max(color.getGreen(), lightColor.getGreen() * dist) * brightnessMultiplier),
-				(int) (Math.max(color.getBlue(), lightColor.getBlue() * dist) * brightnessMultiplier),
+				(int) (Math.max(color.getRed(), lightColor.getRed() * dist)),
+				(int) (Math.max(color.getGreen(), lightColor.getGreen() * dist)),
+				(int) (Math.max(color.getBlue(), lightColor.getBlue() * dist)),
 				color.getAlpha()
 		);
 		return color;

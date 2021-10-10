@@ -7,8 +7,9 @@
     "ServerPlayerEntityMixin"
   ],
   "client": [
-    "HealthRendererMixin",
-    "ClientPlayerEntityMixin"
+    "LightmapTextureManagerMixin",
+    "ClientPlayerEntityMixin",
+    "HudRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
