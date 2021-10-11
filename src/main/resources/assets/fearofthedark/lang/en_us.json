@@ -17,5 +17,8 @@
   "fearofthedark.fear.5": "You feel like there is something following you...",
 
   "fearofthedark._credit.stress.0": "Guy",
-  "fearofthedark.stress.0": "You feel sweat drip down your back..."
+  "fearofthedark.stress.0": "You feel sweat drip down your back...",
+  "fearofthedark.stress.1": "Your heart is racing...",
+
+  "fearofthedark.event.track": "You lose track of where you put your stuff..."
 }

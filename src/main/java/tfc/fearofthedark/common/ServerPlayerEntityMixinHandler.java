@@ -1,7 +1,6 @@
 package tfc.fearofthedark.common;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.gl.PostProcessShader;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -49,6 +48,8 @@ public class ServerPlayerEntityMixinHandler {
 			styleMap.put(new Identifier("fear:4"), style);
 			styleMap.put(new Identifier("fear:5"), new FollowStyle());
 		}
+		
+		styleMap.put(new Identifier("stress:1"), new HeartStyle());
 	}
 	
 	public static boolean checkPhase(ServerPlayerEntity player, int phase, int ticksInDark, int phaseNumber, int ticks, String name, int messageCount) {
@@ -89,36 +90,57 @@ public class ServerPlayerEntityMixinHandler {
 		return phaseNumber == phase && ticksInDark >= ticks;
 	}
 	
-	private static final DamageSource damageSource0 = new DamageSource("fearofthedark.death.0");
+	private static final ArrayList<DamageSource> damageSources = new ArrayList<>();
 	
 	public static final ArrayList<Pair<SoundEvent, Float>> hostileEvents = new ArrayList<>();
 	
 	static {
-		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_ZOMBIE_AMBIENT, 0.7f));
-		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_SKELETON_AMBIENT, 0.5f));
+		for (int i = 0; i < 3; i++) {
+			damageSources.add(new DamageSource("fearofthedark.death." + i));
+		}
+		
+		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_ZOMBIE_AMBIENT, 0.5f));
+		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_SKELETON_AMBIENT, 0.3f));
+		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_SKELETON_SHOOT, 0.1f));
 		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_SPIDER_AMBIENT, 0.3f));
+		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_SPIDER_STEP, 0.34f));
 		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_CREEPER_PRIMED, 0.1f));
-//		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_CREEPER_PRIMED, 0.0001f));
+		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_ENDERMAN_AMBIENT, 0.25f));
+		hostileEvents.add(new Pair<>(SoundEvents.ENTITY_ENDERMAN_SCREAM, 0.1f));
+	}
+	
+	public static DamageSource getSource() {
+		return damageSources.get(new Random().nextInt(damageSources.size()));
+	}
+	
+	public static SoundEvent getSound() {
+		for (Pair<SoundEvent, Float> hostileEvent : hostileEvents) {
+			float chance = hostileEvent.getSecond();
+			if (new Random().nextFloat() <= chance) return hostileEvent.getFirst();
+		}
+		// no reason adding it as a 100% chance when I can just return it without using rng
+		return SoundEvents.ENTITY_ZOMBIE_AMBIENT;
 	}
 	
 	public static void doEffects(int phase, int ticksInDark, int age, int sky, int block, ServerPlayerEntity entity) {
 		switch (phase) {
 			case 4:
-				if ((20 / 40f) - (entity.getHealth() / 40f) > 0) entity.damage(damageSource0, Math.max((1) - (entity.getHealth() / 20f), 0.25f));
+				if ((20 / 40f) - (entity.getHealth() / 40f) > 0 && (age % 10 == 0)) entity.damage(getSource(), Math.max((1) - (entity.getHealth() / 20f), 0.25f));
 				else {
 					int ticksStress = ticksInDark - (int) (PlayerMixinHandler.getTimeFactor(4) * PlayerMixinHandler.getScaleFactor(((IHaveFear)entity).FearOfTheDark_getFactor()));
-					if (ticksStress >= 4000) entity.damage(damageSource0, (20 / 40f));
+					if (ticksStress >= 4000) entity.damage(getSource(), (20 / 40f));
 				}
 			case 3:
 				if (age % 400 == 0 && new Random().nextInt(30) == 1) {
-					entity.playSound(SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, ((new Random().nextFloat() / 2f) - 0.25f + 1), ((new Random().nextFloat() / 2f) - 0.25f + 1));
+//					entity.playSound(SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, ((new Random().nextFloat() / 2f) - 0.25f + 1), ((new Random().nextFloat() / 2f) - 0.25f + 1));
+					// do nothing
 				} else if (age % 500 == 0 && new Random().nextInt(34) == 1) {
 					Vec3d look = entity.getRotationVector();
 					look = look.multiply(1, 0, 1).normalize();
 					Random r = new Random();
 					look = look.rotateY((float) Math.toRadians(r.nextInt(90) - 45));
-					look = look.multiply(r.nextInt(4) + 4);
-					entity.networkHandler.sendPacket(new PlaySoundS2CPacket(SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.HOSTILE, entity.getX() - look.x, entity.getY(), entity.getZ() - look.z, ((new Random().nextFloat() / 2f) - 0.25f + 1), ((new Random().nextFloat() / 2f) - 0.25f + 1)));
+					look = look.multiply(r.nextInt(8) + 8);
+					entity.networkHandler.sendPacket(new PlaySoundS2CPacket(getSound(), SoundCategory.HOSTILE, entity.getX() - look.x, entity.getY(), entity.getZ() - look.z, ((new Random().nextFloat() / 2f) - 0.25f + 1), ((new Random().nextFloat() / 2f) - 0.25f + 1)));
 //				} else if (age % 500 == 0 && new Random().nextInt(34) == 1) {
 				} else if (age % 500 == 0 && new Random().nextInt(24) == 1) {
 					if (sky == 15 && block <= 4 && entity.getServerWorld().isNight()) {
@@ -131,7 +153,7 @@ public class ServerPlayerEntityMixinHandler {
 					}
 				}
 				if (ticksInDark == (phase * 30) && new Random().nextInt(30) <= 3) {
-					if (entity.getHealth() > 1) entity.damage(damageSource0, 0.1f);
+					if (entity.getHealth() > 1) entity.damage(getSource(), 0.1f);
 				}
 			case 2:
 			case 1:

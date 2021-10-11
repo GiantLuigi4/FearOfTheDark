@@ -1,3 +1,8 @@
 accessWidener    v1    named
 accessible method net/minecraft/entity/damage/DamageSource <init> (Ljava/lang/String;)V
 accessible class net/minecraft/client/gui/hud/InGameHud$HeartType
+
+accessible field net/minecraft/client/network/ClientPlayerEntity tickables Ljava/util/List;
+accessible field net/minecraft/client/sound/BiomeEffectSoundPlayer moodPercentage F
+
+accessible field net/minecraft/entity/LivingEntity activeStatusEffects Ljava/util/Map;

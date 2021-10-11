@@ -7,8 +7,8 @@
     "ServerPlayerEntityMixin"
   ],
   "client": [
-    "LightmapTextureManagerMixin",
     "ClientPlayerEntityMixin",
+    "GUIRendererMixin",
     "HudRendererMixin"
   ],
   "injectors": {

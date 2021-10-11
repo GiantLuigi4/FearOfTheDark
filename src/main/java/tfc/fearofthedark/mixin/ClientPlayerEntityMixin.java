@@ -1,23 +1,18 @@
 package tfc.fearofthedark.mixin;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.attribute.*;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import tfc.fearofthedark.common.ClientPlayerInfo;
 import tfc.fearofthedark.common.IHaveFear;
 import tfc.fearofthedark.common.PlayerMixinHandler;
 
-import java.util.UUID;
-
 @Mixin(ClientPlayerEntity.class)
-public class ClientPlayerEntityMixin implements IHaveFear {
+public class ClientPlayerEntityMixin implements IHaveFear, ClientPlayerInfo {
 	@Unique
 	float factor;
 	@Unique
@@ -57,6 +52,16 @@ public class ClientPlayerEntityMixin implements IHaveFear {
 	
 	@Inject(at = @At("HEAD"), method = "tick")
 	public void preTick(CallbackInfo ci) {
-		PlayerMixinHandler.addAttributes((PlayerEntity) (Object) this);
+		PlayerMixinHandler.onTick((PlayerEntity) (Object) this);
+	}
+	
+	@Unique boolean isPocketAware = true;
+	
+	public boolean FearOfTheDark_isPocketAware() {
+		return isPocketAware;
+	}
+	
+	public void FearOfTheDark_setPocketAware(boolean value) {
+		isPocketAware = value;
 	}
 }

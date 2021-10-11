@@ -1,11 +1,25 @@
 package tfc.fearofthedark.common;
 
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.sound.BiomeEffectSoundPlayer;
+import net.minecraft.client.util.ClientPlayerTickable;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
+import tfc.fearofthedark.styles.FadeStyle;
+import tfc.fearofthedark.styles.SwingingLightStyle;
+import tfc.stylesplusplus.api.ExtraStyle;
+import tfc.stylesplusplus.api.ExtraStyleData;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class PlayerMixinHandler {
@@ -29,7 +43,57 @@ public class PlayerMixinHandler {
 		return 120 * fearFactor;
 	}
 	
-	public static void addAttributes(PlayerEntity entity) {
+	public static void onTick(PlayerEntity entity) {
+		IHaveFear fearHolder = (IHaveFear) entity;
+		
+		if (fearHolder.FearOfTheDark_getPhase() >= 3) {
+			if (entity.age % 300 == 3 && new Random().nextInt(13) == 3) {
+				if (entity instanceof ClientPlayerInfo) {
+					if (((ClientPlayerInfo) entity).FearOfTheDark_isPocketAware()) {
+						((ClientPlayerInfo) entity).FearOfTheDark_setPocketAware(false);
+						{
+							MutableText text = new LiteralText("").setStyle(Style.EMPTY);
+							
+							{
+								MutableText itIsDark = new TranslatableText("fearofthedark.dark.prompt");
+								Style style = Style.EMPTY.withColor(Formatting.DARK_GRAY);
+								// TODO: randomize style
+								SwingingLightStyle lightStyle = new SwingingLightStyle();
+								((ExtraStyleData) style).addStyle(lightStyle);
+								itIsDark.setStyle(style);
+								
+								text.append(itIsDark);
+							}
+							
+							{
+								Random random = new Random();
+								MutableText child = new TranslatableText("fearofthedark.event.track");
+								Style style = Style.EMPTY.withBold(null).withColor(Formatting.DARK_GRAY);
+								ExtraStyle extraStyle = new FadeStyle();
+								((ExtraStyleData) style).getExtraStyles().add(extraStyle.copy());
+								child.setStyle(style);
+								text.append(child);
+							}
+							
+							entity.sendSystemMessage(text, Util.NIL_UUID);
+						}
+					}
+				}
+			}
+		} else {
+			if (!((ClientPlayerInfo) entity).FearOfTheDark_isPocketAware()) ((ClientPlayerInfo) entity).FearOfTheDark_setPocketAware(true);
+		}
+		
+		{
+			ClientPlayerTickable clientPlayerTickable = null;
+			for (ClientPlayerTickable tickable : ((ClientPlayerEntity) entity).tickables)
+				if (tickable instanceof BiomeEffectSoundPlayer)
+					clientPlayerTickable = tickable;
+			
+			if (clientPlayerTickable instanceof BiomeEffectSoundPlayer)
+				((BiomeEffectSoundPlayer) clientPlayerTickable).moodPercentage += (getTimeFactor(fearHolder.FearOfTheDark_getPhase()) / (float) getTimeFactor(4)) / 1000f;
+		}
+		
 		AttributeContainer container = (entity).getAttributes();
 		if (container == null) return;
 		

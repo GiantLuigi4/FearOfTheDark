@@ -6,17 +6,12 @@ import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import tfc.fearofthedark.common.IHaveFear;
 import tfc.fearofthedark.common.PlayerMixinHandler;
-import tfc.stylesplusplus.api.Color;
-
-import java.util.function.Function;
 
 public class MixinHandler {
 	public static void preDrawHeart(MatrixStack matrices, InGameHud.HeartType type, int x, int y, int v, boolean blinking, boolean halfHeart, CallbackInfo ci) {
@@ -99,52 +94,5 @@ public class MixinHandler {
 		bufferBuilder.vertex(matrix, (float) x0, (float) y0, (float) z).color(progress, progress, progress, progress).texture(u0, v0).next();
 		bufferBuilder.end();
 		BufferRenderer.draw(bufferBuilder);
-	}
-	
-	public static void modifyLight(Args args, Function<Integer, Float> brightnessGetter) {
-		int v = args.get(2);
-		Color lightColor = new Color(v);
-//		float mul = 1 - ((Integer) args.get(0) / 15f);
-		float mul;
-		
-		ClientWorld clientWorld = MinecraftClient.getInstance().world;
-		
-		float sky = brightnessGetter.apply(args.get(0));
-		float block = brightnessGetter.apply(args.get(0));
-		float f = clientWorld.method_23783(1.0F);
-		if (((Integer) args.get(0)).intValue() == 15) return;
-//		if (((Integer) args.get(0)).intValue() == 0) return;
-		if (clientWorld.getLightningTicksLeft() > 0) f = 1f;
-		else f = f * 0.95F + 0.05F;
-		sky = 1 - sky;
-		sky *= f;
-		
-//		mul = 1 - f;
-		mul = sky;
-		mul -= 0.23;
-		mul = Math.max(mul, 0);
-		mul += 0.23;
-		
-		float gamma = (float) MinecraftClient.getInstance().options.gamma / 3f;
-//		{
-//			float f1 = 1.0F - mul;
-//			mul *= 1.0F - f1 * f1 * f1 * f1;
-//		}
-		
-		mul = ((1 - ((mul + gamma) / 2f)) + (0.5f)) / 2f;
-//		mul += (gamma / 1);
-//		mul /= 2;
-//		mul = 1 - mul;
-////		mul += 0.25f * f;
-//		mul += 0.5;
-//		mul /= 2;
-		
-		Color newColor = new Color(
-				Math.min((int) (lightColor.getRed() * (1.1 / (mul * 2.4))), lightColor.getRed()),
-				Math.min((int) (lightColor.getGreen() * (1.2 / (mul * 2.5))), lightColor.getGreen()),
-				Math.min((int) (lightColor.getBlue() * (1.5 / (mul * 2.6))), lightColor.getBlue()),
-				lightColor.getAlpha()
-		);
-		args.set(2, newColor.getRGB());
 	}
 }

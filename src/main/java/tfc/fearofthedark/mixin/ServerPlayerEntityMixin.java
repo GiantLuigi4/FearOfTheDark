@@ -2,8 +2,11 @@ package tfc.fearofthedark.mixin;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -12,6 +15,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.LightType;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,8 +26,8 @@ import tfc.fearofthedark.common.DualFactored;
 import tfc.fearofthedark.common.PlayerMixinHandler;
 import tfc.fearofthedark.common.ServerPlayerEntityMixinHandler;
 import tfc.fearofthedark.networking.FearOfTheDarkPacket;
-import tfc.stylesplusplus.mixin.SerializerMixin;
 
+import java.util.Map;
 import java.util.Random;
 
 @Mixin(ServerPlayerEntity.class)
@@ -38,6 +42,9 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 	public ServerPlayNetworkHandler networkHandler;
 	@Shadow
 	private float syncedHealth;
+	
+	@Shadow protected abstract void onStatusEffectApplied(StatusEffectInstance effect, @Nullable Entity source);
+	
 	@Unique
 	protected int ticksInDark;
 	
@@ -97,10 +104,64 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 	
 	protected float lastHealth;
 	
+	protected float mutateDuration(int original) {
+		float out = original * 0.125f;
+		out = (float) Math.sqrt(out);
+		out = (float) Math.sqrt(out);
+		out = Math.max(out, 4);
+		return out;
+	}
+	
+	@Inject(at = @At("HEAD"), method = "worldChanged")
+	public void preWorldChanged(ServerWorld origin, CallbackInfo ci) {
+		tickNumber = 0;
+	}
+	
 	@Inject(at = @At("HEAD"), method = "tick")
 	public void preTick(CallbackInfo ci) {
+		float fearFactorEffects = 0;
+		{
+			Map<StatusEffect, StatusEffectInstance> effects = ((LivingEntity) (Object) this).activeStatusEffects;
+			for (StatusEffect statusEffect : effects.keySet()) {
+				// beneficial
+				if (StatusEffects.ABSORPTION.equals(statusEffect)) {
+					StatusEffectInstance instance = effects.get(statusEffect);
+					fearFactorEffects += ((instance.getAmplifier() + 1) * mutateDuration(instance.getDuration())) / 1000f;
+					fearFactorEffects /= 2;
+				} else if (StatusEffects.RESISTANCE.equals(statusEffect)) {
+					StatusEffectInstance instance = effects.get(statusEffect);
+					fearFactorEffects += ((instance.getAmplifier() + 1) * mutateDuration(instance.getDuration())) / 100f;
+				} else if (StatusEffects.REGENERATION.equals(statusEffect)) {
+					StatusEffectInstance instance = effects.get(statusEffect);
+					fearFactorEffects += ((instance.getAmplifier() + 1) * mutateDuration(instance.getDuration())) / 1000f;
+				} else if (StatusEffects.NIGHT_VISION.equals(statusEffect)) {
+					StatusEffectInstance instance = effects.get(statusEffect);
+					fearFactorEffects += ((instance.getAmplifier() + 1) * mutateDuration(instance.getDuration())) / 10000f;
+				}
+				// negative
+				else if (StatusEffects.BLINDNESS.equals(statusEffect)) {
+					StatusEffectInstance instance = effects.get(statusEffect);
+					fearFactorEffects -= ((instance.getAmplifier() + 1) * mutateDuration(instance.getDuration())) / 1000f;
+				} else if (StatusEffects.POISON.equals(statusEffect)) {
+					StatusEffectInstance instance = effects.get(statusEffect);
+					fearFactorEffects -= ((instance.getAmplifier() + 1) * mutateDuration(instance.getDuration())) / 1000f;
+				} else if (StatusEffects.WITHER.equals(statusEffect)) {
+					StatusEffectInstance instance = effects.get(statusEffect);
+					fearFactorEffects -= ((instance.getAmplifier() + 1) * mutateDuration(instance.getDuration())) / 100f;
+				} else if (StatusEffects.NAUSEA.equals(statusEffect)) {
+					StatusEffectInstance instance = effects.get(statusEffect);
+					fearFactorEffects -= ((instance.getAmplifier() + 1) * mutateDuration(instance.getDuration())) / 10000f;
+				} else if (StatusEffects.LEVITATION.equals(statusEffect)) {
+					StatusEffectInstance instance = effects.get(statusEffect);
+					fearFactorEffects -= ((instance.getAmplifier() + 1) * mutateDuration(instance.getDuration())) / 1000f;
+				}
+			}
+			fearFactorEffects += 1;
+			fearFactorEffects = Math.max(fearFactorEffects, 0.25f);
+		}
+		
 		if (fearFactorB >= 2f) fearFactorB = 2f;
-		float knownFactor = fearFactorA * fearFactorB;
+		float knownFactor = fearFactorA * fearFactorB * fearFactorEffects;
 //		if  (tickNumber == 125) {
 		if (tickNumber == 30) {
 			ServerPlayNetworking.send(
@@ -129,9 +190,9 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 		else ticksInDark -= ServerPlayerEntityMixinHandler.getRecoveryFactor(sky, block);
 		
 		if (ticksInDark < 0) ticksInDark = 0;
-
+		
 //		int scale = 60;
-		float scale = PlayerMixinHandler.getScaleFactor(fearFactorA * fearFactorB);
+		float scale = PlayerMixinHandler.getScaleFactor(fearFactorA * fearFactorB * fearFactorEffects);
 		// multiplying by scale because the preceding number is my testing number
 		if (checkPhase(4, (int) (PlayerMixinHandler.getTimeFactor(4) * scale), "stress", 2)) ;
 		else if (checkPhase(3, (int) (PlayerMixinHandler.getTimeFactor(3) * scale), "fear", 5)) ;
@@ -149,7 +210,7 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 		
 		ServerPlayerEntityMixinHandler.doEffects(phase, ticksInDark, ((Entity) (Object) this).age, sky, block, ((ServerPlayerEntity) (Object) this));
 		
-		if (knownFactor != fearFactorA * fearFactorB) {
+		if (knownFactor != fearFactorA * fearFactorB * fearFactorEffects) {
 			ServerPlayNetworking.send(
 					(ServerPlayerEntity) (Object) this,
 					new Identifier("fearofthedark:networking"),
@@ -172,7 +233,7 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 	@Inject(at = @At("HEAD"), method = "readCustomDataFromNbt")
 	public void preRead(NbtCompound nbt, CallbackInfo ci) {
 		if (nbt.contains("fearofthedark", NbtElement.COMPOUND_TYPE)) {
-			NbtCompound fotd = new NbtCompound();
+			NbtCompound fotd = nbt.getCompound("fearofthedark");
 			if (fotd.contains("ticksInDark", NbtElement.INT_TYPE)) ticksInDark = fotd.getInt("ticksInDark");
 			if (fotd.contains("fearFactorA", NbtElement.FLOAT_TYPE)) fearFactorA = fotd.getFloat("fearFactorA");
 			if (fotd.contains("fearFactorB", NbtElement.FLOAT_TYPE)) fearFactorB = fotd.getFloat("fearFactorB");
