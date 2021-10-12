@@ -6,7 +6,10 @@
   "description": "MMD SpookyJam Mod\n\nGoes well with True Darkness\n\nNo description yet...",
   "authors": [
     "GiantLuigi4 - Dev",
-    "Guy - Contributed a chat message"
+    "Guy - Contributed a chat message",
+    "Just a Goat (Stonewall0210) - Contributed a chat message",
+    "MalekiRe - Contributed a chat message",
+    "Voleil - Contributed two chat messages"
   ],
   "contact": {},
   "license": "MIT",
@@ -26,6 +29,7 @@
   "depends": {
     "fabricloader": ">=0.11.7",
     "fabric": "*",
+    "stylesplusplus": "*",
     "minecraft": "1.17.1"
   },
   "accessWidener": "fearofthedark.accesswidener"

@@ -194,7 +194,7 @@ public abstract class ServerPlayerEntityMixin implements DualFactored {
 //		int scale = 60;
 		float scale = PlayerMixinHandler.getScaleFactor(fearFactorA * fearFactorB * fearFactorEffects);
 		// multiplying by scale because the preceding number is my testing number
-		if (checkPhase(4, (int) (PlayerMixinHandler.getTimeFactor(4) * scale), "stress", 2)) ;
+		if (checkPhase(4, (int) (PlayerMixinHandler.getTimeFactor(4) * scale), "stress", 5)) ;
 		else if (checkPhase(3, (int) (PlayerMixinHandler.getTimeFactor(3) * scale), "fear", 5)) ;
 		else if (checkPhase(2, (int) (PlayerMixinHandler.getTimeFactor(2) * scale), "paranoia", 2)) ;
 		else if (checkPhase(1, (int) (PlayerMixinHandler.getTimeFactor(1) * scale), "nervousness", 2)) ;

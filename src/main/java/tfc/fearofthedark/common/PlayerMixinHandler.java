@@ -66,7 +66,6 @@ public class PlayerMixinHandler {
 							}
 							
 							{
-								Random random = new Random();
 								MutableText child = new TranslatableText("fearofthedark.event.track");
 								Style style = Style.EMPTY.withBold(null).withColor(Formatting.DARK_GRAY);
 								ExtraStyle extraStyle = new FadeStyle();

@@ -7,10 +7,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
@@ -79,6 +76,14 @@ public class ServerPlayerEntityMixinHandler {
 					ExtraStyle extraStyle = styleMap.getOrDefault(new Identifier(name, "" + index), null);
 					if (extraStyle != null) ((ExtraStyleData) style).getExtraStyles().add(extraStyle.copy());
 					child.setStyle(style);
+					{
+						// TODO: figure this out
+						HoverEvent event = new HoverEvent(
+								HoverEvent.Action.SHOW_TEXT,
+								new TranslatableText("fearofthedark." + name + "." + index)
+						);
+						style.withHoverEvent(event);
+					}
 					text.append(child);
 				}
 				
@@ -125,9 +130,10 @@ public class ServerPlayerEntityMixinHandler {
 	public static void doEffects(int phase, int ticksInDark, int age, int sky, int block, ServerPlayerEntity entity) {
 		switch (phase) {
 			case 4:
-				if ((20 / 40f) - (entity.getHealth() / 40f) > 0 && (age % 10 == 0)) entity.damage(getSource(), Math.max((1) - (entity.getHealth() / 20f), 0.25f));
+				if ((20 / 40f) - (entity.getHealth() / 40f) > 0 && (age % 10 == 0))
+					entity.damage(getSource(), Math.max((1) - (entity.getHealth() / 20f), 0.25f));
 				else {
-					int ticksStress = ticksInDark - (int) (PlayerMixinHandler.getTimeFactor(4) * PlayerMixinHandler.getScaleFactor(((IHaveFear)entity).FearOfTheDark_getFactor()));
+					int ticksStress = ticksInDark - (int) (PlayerMixinHandler.getTimeFactor(4) * PlayerMixinHandler.getScaleFactor(((IHaveFear) entity).FearOfTheDark_getFactor()));
 					if (ticksStress >= 4000) entity.damage(getSource(), (20 / 40f));
 				}
 			case 3:
