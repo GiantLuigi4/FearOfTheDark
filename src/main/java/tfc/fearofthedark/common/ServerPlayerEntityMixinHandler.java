@@ -47,6 +47,7 @@ public class ServerPlayerEntityMixinHandler {
 		}
 		
 		styleMap.put(new Identifier("stress:1"), new HeartStyle());
+		styleMap.put(new Identifier("stress:5"), new AloneStyle());
 	}
 	
 	public static boolean checkPhase(ServerPlayerEntity player, int phase, int ticksInDark, int phaseNumber, int ticks, String name, int messageCount) {
