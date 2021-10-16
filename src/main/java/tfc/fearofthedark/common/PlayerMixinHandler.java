@@ -93,6 +93,39 @@ public class PlayerMixinHandler {
 				((BiomeEffectSoundPlayer) clientPlayerTickable).moodPercentage += (getTimeFactor(fearHolder.FearOfTheDark_getPhase()) / (float) getTimeFactor(4)) / 1000f;
 		}
 		
+//		if (FearOfTheDarkClient.shaderUtilIntegration) {
+//			if (entity.getEntityWorld().getLightLevel(LightType.SKY, (entity).getBlockPos().up()) >= 5 && entity.world.isDay()) ((ClientPlayerInfo)entity).setTicksOutOfSun(((ClientPlayerInfo)entity).getTicksOutOfSun() - 10);
+//			else if (entity.getEntityWorld().getLightLevel(LightType.BLOCK, (entity).getBlockPos().up()) >= 6) ((ClientPlayerInfo)entity).setTicksOutOfSun(((ClientPlayerInfo)entity).getTicksOutOfSun() - 1);
+//			else ((ClientPlayerInfo)entity).setTicksOutOfSun(((ClientPlayerInfo)entity).getTicksOutOfSun() + 2);
+//
+//			((ClientPlayerInfo)entity).setTicksOutOfSun(MathHelper.clamp(((ClientPlayerInfo)entity).getTicksOutOfSun(), 0, (2000 * 2)));
+//
+//			PostProcessShader shader;
+//
+//			float t = ((ClientPlayerInfo)entity).getTicksOutOfSun() / (2000f * 2);
+//			float blurAmt = t * 10f;
+//			if (entity.getEntityWorld().getLightLevel(LightType.SKY, (entity).getBlockPos().up()) <= 8 || !entity.world.isDay()) blurAmt = 0;
+//
+//			float lblur = ((ClientPlayerInfo)entity).getLastBlur();
+//			if (blurAmt != 10) lblur = MathHelper.lerp((10 - (blurAmt - lblur)) / 1.5f, lblur, blurAmt);
+//
+//			blurAmt = lblur;
+//
+//			if (PostProcessUtils.hasPass(new Identifier("fearofthedark:blur_x"))) shader = PostProcessUtils.getPass(new Identifier("fearofthedark:blur_x"));
+//			else shader = PostProcessUtils.addPass(new Identifier("fearofthedark:blur_x"), new Identifier("minecraft:blur"));
+//			shader.getProgram().enable();
+//			shader.getProgram().getUniformByNameOrDummy("BlurDir").set(1f, 0f);
+//			shader.getProgram().getUniformByNameOrDummy("Radius").set((float) (int) blurAmt);
+//			shader.getProgram().disable();
+//
+//			if (PostProcessUtils.hasPass(new Identifier("fearofthedark:blur_y"))) shader = PostProcessUtils.getPass(new Identifier("fearofthedark:blur_y"));
+//			else shader = PostProcessUtils.addPass(new Identifier("fearofthedark:blur_y"), new Identifier("minecraft:blur"));
+//			shader.getProgram().enable();
+//			shader.getProgram().getUniformByNameOrDummy("BlurDir").set(0f, 1f);
+//			shader.getProgram().getUniformByNameOrDummy("Radius").set(0f);
+//			shader.getProgram().disable();
+//		}
+		
 		AttributeContainer container = (entity).getAttributes();
 		if (container == null) return;
 		

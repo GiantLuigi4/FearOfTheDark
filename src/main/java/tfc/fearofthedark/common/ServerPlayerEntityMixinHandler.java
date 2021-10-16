@@ -36,9 +36,11 @@ public class ServerPlayerEntityMixinHandler {
 		styleMap.put(new Identifier("nervousness:2"), new ShakyStyle());
 		
 		styleMap.put(new Identifier("paranoia:0"), new FocusStyle());
+		styleMap.put(new Identifier("paranoia:2"), new ShakyStyle());
 		
 		{
 			styleMap.put(new Identifier("fear:0"), new FearStyle());
+			styleMap.put(new Identifier("fear:2"), new WantStyle());
 			styleMap.put(new Identifier("fear:3"), new TorchStyle());
 			TorchStyle style = new TorchStyle();
 			style.speed *= 2;

@@ -20,6 +20,9 @@ public class ClientPlayerEntityMixin implements IHaveFear, ClientPlayerInfo {
 	@Unique
 	int phase;
 	
+	@Unique
+	int ticksOutOfSun = 0;
+	
 	@Override
 	public float FearOfTheDark_getFactor() {
 		return factor;
@@ -63,5 +66,27 @@ public class ClientPlayerEntityMixin implements IHaveFear, ClientPlayerInfo {
 	
 	public void FearOfTheDark_setPocketAware(boolean value) {
 		isPocketAware = value;
+	}
+	
+	@Override
+	public int getTicksOutOfSun() {
+		return ticksOutOfSun;
+	}
+	
+	@Unique float lastBlur = 0;
+	
+	@Override
+	public float getLastBlur() {
+		return lastBlur;
+	}
+	
+	@Override
+	public void setLastBlur(float lb) {
+		lastBlur = lb;
+	}
+	
+	@Override
+	public void setTicksOutOfSun(int amt) {
+		ticksOutOfSun = amt;
 	}
 }

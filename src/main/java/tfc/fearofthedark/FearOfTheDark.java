@@ -23,6 +23,7 @@ public class FearOfTheDark implements ModInitializer {
 			StyleRegistry.register(new Identifier("fearofthedark:heart"), HeartStyle::new);
 			StyleRegistry.register(new Identifier("fearofthedark:fade"), FadeStyle::new);
 			StyleRegistry.register(new Identifier("fearofthedark:alone"), AloneStyle::new);
+			StyleRegistry.register(new Identifier("fearofthedark:want"), WantStyle::new);
 		});
 		
 		ServerPlayerEvents.AFTER_RESPAWN.register(
